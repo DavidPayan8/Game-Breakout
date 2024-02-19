@@ -38,7 +38,7 @@ function crearNuevaBola(x, y, bola) {
     x: x,
     y: y,
     size: BOLA_SIZE,
-    velocidad: bola.velocidad,
+    velocidad: BOLA_VELOCIDAD,
     dx: -bola.dx, // Cambiar la dirección en X
     dy: -bola.dy, // Cambiar la dirección en Y
     visible: true,
@@ -76,10 +76,9 @@ const iBloque = {
   duplicaBola: false
 };
 
-const bloques = [];
 
-// Crear conjunto de bloques
-function crearBloques() {
+//Patrones bloques
+const bloques = [];
   const centroX = Math.floor(nColumnasBloques / 2); // Centro en la columna
   const centroY = Math.floor(nFilasBloques / 2); // Centro en la fila
   const patrones = [
@@ -87,12 +86,13 @@ function crearBloques() {
     (i, j) => (i + j) % 2 !== 0,  // Patrón 2: Suma de coordenadas no divisible por 2
     (i, j) => i === centroX || j === centroY || Math.abs(i - centroX) === Math.abs(j - centroY), // Patrón 3: Cruces
     (i, j) => Math.abs(i - centroX) + Math.abs(j - centroY) <= centroX // Patrón 4: Círculo
-  ];
+  ]; 
 
-  const numPatrones = patrones.length;
-  const randomIndex = Math.floor(Math.random() * numPatrones);
-  const patronElegido = patrones[randomIndex];
-
+// Crear conjunto de bloques
+function crearBloques() {
+  const randomIndex = Math.floor(Math.random() * patrones.length);
+  const patronElegido = patrones[randomIndex]; 
+  numBloques=0;
   for (let i = 0; i < nColumnasBloques; i++) {
     bloques[i] = [];
     for (let j = 0; j < nFilasBloques; j++) {
@@ -101,10 +101,10 @@ function crearBloques() {
         const y = j * (iBloque.h + iBloque.padding) + iBloque.offsetY;
         const duplicaBola = Math.random() < 0.1;
         bloques[i][j] = { x, y, ...iBloque, duplicaBola };
+        numBloques++;
       }
     }
   }
-  console.log();
 }
 
 crearBloques();
@@ -260,8 +260,8 @@ function reiniciarJuego() {
   crearBloques();
   //Bloques
   dibujaMuro();
-  paleta.x = canvas.width / 2 - 40;
-  paleta.y = canvas.height - 20;
+  paleta.x = PALETA_X;
+  paleta.y = PALETA_Y;
   paleta.visible = true;
   bola.x = BOLA_X;
   bola.y = BOLA_Y;
@@ -275,13 +275,6 @@ function reiniciarJuego() {
   dibujaBolas();
   juegoIniciado = false;
   juegoTerminado = false;
-  /*   bloques.forEach(bloque => {
-      bloque.forEach(ibloque =>{
-        numBloques++;
-      })
-    }); */
-
-  console.log(numBloques)
 }
 
 
@@ -301,7 +294,6 @@ juegoIniciado = false;
 // Función para pausar el juego
 function update() {
   if (!juegoPausado && juegoIniciado) {
-    console.log(bolasAdicionales.length)
     muevePaleta();
 
     //Bola principal
@@ -334,7 +326,6 @@ let animationId = requestAnimationFrame(update);
 update();
 
 function iniciarJuego(e) {
-  console.log(juegoIniciado)
   if (!juegoIniciado) {
     if (e.key !== "ArrowRight" || e.key !== "ArrowLeft") {
       bola.dx = BOLA_DX;
