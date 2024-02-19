@@ -6,6 +6,7 @@ const ctx = canvas.getContext("2d");
 
 let puntuacion = 0;
 let numBloques = 0;
+textoAnimado = null;
 const nColumnasBloques = 9;
 const nFilasBloques = 5;
 const delay = 3000;
@@ -79,20 +80,20 @@ const iBloque = {
 
 //Patrones bloques
 const bloques = [];
-  const centroX = Math.floor(nColumnasBloques / 2); // Centro en la columna
-  const centroY = Math.floor(nFilasBloques / 2); // Centro en la fila
-  const patrones = [
-    (i, j) => (i + j) % 3 !== 0,  // Patrón 1: Suma de coordenadas no divisible por 3
-    (i, j) => (i + j) % 2 !== 0,  // Patrón 2: Suma de coordenadas no divisible por 2
-    (i, j) => i === centroX || j === centroY || Math.abs(i - centroX) === Math.abs(j - centroY), // Patrón 3: Cruces
-    (i, j) => Math.abs(i - centroX) + Math.abs(j - centroY) <= centroX // Patrón 4: Círculo
-  ]; 
+const centroX = Math.floor(nColumnasBloques / 2); // Centro en la columna
+const centroY = Math.floor(nFilasBloques / 2); // Centro en la fila
+const patrones = [
+  (i, j) => (i + j) % 3 !== 0,  // Patrón 1: Suma de coordenadas no divisible por 3
+  (i, j) => (i + j) % 2 !== 0,  // Patrón 2: Suma de coordenadas no divisible por 2
+  (i, j) => i === centroX || j === centroY || Math.abs(i - centroX) === Math.abs(j - centroY), // Patrón 3: Cruces
+  (i, j) => Math.abs(i - centroX) + Math.abs(j - centroY) <= centroX // Patrón 4: Círculo
+];
 
 // Crear conjunto de bloques
 function crearBloques() {
   const randomIndex = Math.floor(Math.random() * patrones.length);
-  const patronElegido = patrones[randomIndex]; 
-  numBloques=0;
+  const patronElegido = patrones[randomIndex];
+  numBloques = 0;
   for (let i = 0; i < nColumnasBloques; i++) {
     bloques[i] = [];
     for (let j = 0; j < nFilasBloques; j++) {
@@ -136,6 +137,7 @@ function dibujaPaleta() {
   ctx.fill();
   ctx.closePath();
 }
+
 
 // Dibuja la puntuación
 function dibujaPuntuacion() {
@@ -242,6 +244,8 @@ function mueveBola(bola) {
 // Actualiza puntuacion
 function actualizaPuntuacion() {
   puntuacion++;
+  document.getElementById("puntuacion").innerHTML = puntuacion;
+  textoAnimado = { texto: "+1", x: canvas.width - 100, y: 35 }; // Iniciar la animación del texto  
   if (puntuacion === numBloques) {
     bola.visible = false;
     paleta.visible = false;
@@ -269,6 +273,7 @@ function reiniciarJuego() {
   bola.velocidad = BOLA_VELOCIDAD;
   // Reiniciar la puntuación
   puntuacion = 0;
+  document.getElementById("puntuacion").innerHTML = 0;
   if (bolasAdicionales.length == 0) {
     bolasAdicionales.push(bola);
   }
@@ -277,7 +282,15 @@ function reiniciarJuego() {
   juegoTerminado = false;
 }
 
-
+//Animacion para los puntos
+function dibujaAnimacion() {
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
+  ctx.font = '20px Arial';
+  ctx.fillText(texto, x, y);
+  ctx.fill();
+  ctx.closePath();
+}
 
 // Dibujar el canvas
 function dibujaTodo() {
@@ -305,11 +318,41 @@ function update() {
       mueveBola(bola);
       dibujaBola(bola);
     });
-
   }
   dibujaTodo();
+/*   if (textoAnimado) {
+    mostrarTextoAnimadoEnCanvas(textoAnimado.texto, textoAnimado.x, textoAnimado.y);
+  } */
   animationId = requestAnimationFrame(update);
 }
+
+/* function mostrarTextoAnimadoEnCanvas(texto, x, y) {
+  let alpha = 1;
+  const velocidadDescenso = 1;
+  const velocidadDifuminado = 0.02;
+
+  // Función para dibujar el texto con la transparencia actual
+  function draw() { // Limpiar todo el lienzo
+    ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
+    ctx.font = '20px Arial';
+    ctx.fillText(texto, x, y);
+  }
+
+  // Función para animar el texto
+  function animate() {
+    draw();
+    alpha -= velocidadDifuminado; // Reducir la transparencia
+    if (alpha > 0) {
+      console.log("Altura: " + y)
+      y += velocidadDescenso + 5; // Mover el texto hacia abajo
+      requestAnimationFrame(animate); // Continuar la animación en el próximo fotograma
+    } else {
+      textoAnimado = null; // Restablecer la variable de control una vez que la animación haya terminado
+    } 
+  }
+
+  animate(); // Iniciar la animación
+} */
 
 
 // Función para pausar el juego
