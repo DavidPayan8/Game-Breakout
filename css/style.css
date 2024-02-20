@@ -25,6 +25,7 @@ canvas {
 }
 
 .btn {
+    font-family: "Press Start 2P", system-ui;
     cursor: pointer;
     border: 0;
     padding: 10px 20px;
