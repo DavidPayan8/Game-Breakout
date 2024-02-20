@@ -68,11 +68,10 @@ bloques.forEach(grupo => {
 ```
 3. Puntuación actualizada en tiempo real.
    ```javascript
-   // Actualiza la puntuación del jugador
+    // Actualiza la puntuación del jugador
 function actualizaPuntuacion() {
   puntuacion++; // Incrementa la puntuación en 1
   crearSpans(); // Crea un span con el texto "+1"
-
   if (puntuacion === numBloques) {
     // Si la puntuación alcanza el número total de bloques, el juego termina
     bola.visible = false;
@@ -85,6 +84,7 @@ function actualizaPuntuacion() {
     }, delay);
   }
 }
+```
 4. Pausa y reanuda el juego con la barra espaciadora.
 ```javascript
 // Función para pausar o reanudar el juego
