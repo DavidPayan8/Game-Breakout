@@ -68,3 +68,37 @@ canvas {
 .reglas.mostrar {
     transform: translateX(0);
 }
+
+
+/* Estilo para los spans */
+span {
+    position: absolute;
+    top: 70px;
+    left: 73%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    animation: moverArriba 1s linear forwards, degradar 0.6s linear forwards;
+}
+
+/* Animación para mover los spans hacia abajo */
+@keyframes moverArriba {
+    from {
+        top: 70;
+    }
+    to {
+        top: calc(0% - 70px); /* Mueve el span hacia abajo hasta el 100% de la altura del contenedor */
+    }
+}
+
+/* Animación para degradar los spans */
+@keyframes degradar {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+

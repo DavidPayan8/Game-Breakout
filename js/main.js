@@ -1,12 +1,16 @@
 const btnReglas = document.getElementById("btn-reglas");
 const btnCierra = document.getElementById("btn-cerrar");
+const spans = document.getElementById("spansContainer")
 const reglas = document.getElementById("reglas");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+
+let juegoTerminado = false;
+let juegoPausado = false;
+let juegoIniciado = false;
 let puntuacion = 0;
 let numBloques = 0;
-textoAnimado = null;
 const nColumnasBloques = 9;
 const nFilasBloques = 5;
 const delay = 3000;
@@ -72,11 +76,23 @@ const iBloque = {
   padding: 10,
   offsetX: 45,
   offsetY: 60,
+  color: "#0000",
   visible: true,
-  velocidadBola: bola.velocidad,
   duplicaBola: false
 };
 
+
+function getRandomColor(){
+  const codigo = '0123456789ABCDEF';
+    let color = '#';
+    do {
+        color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += codigo[Math.floor(Math.random() * 16)];
+        }
+    } while (color === '#FFFFFF'); //Para que no salga blanco
+    return color;
+}
 
 //Patrones bloques
 const bloques = [];
@@ -101,7 +117,8 @@ function crearBloques() {
         const x = i * (iBloque.w + iBloque.padding) + iBloque.offsetX;
         const y = j * (iBloque.h + iBloque.padding) + iBloque.offsetY;
         const duplicaBola = Math.random() < 0.1;
-        bloques[i][j] = { x, y, ...iBloque, duplicaBola };
+        const color = getRandomColor();
+        bloques[i][j] = { x, y, ...iBloque, duplicaBola, color };
         numBloques++;
       }
     }
@@ -151,7 +168,7 @@ function dibujaMuro() {
     grupo.forEach((bloque) => {
       ctx.beginPath();
       ctx.rect(bloque.x, bloque.y, bloque.w, bloque.h);
-      ctx.fillStyle = bloque.visible ? "#0095dd" : "transparent";
+      ctx.fillStyle = bloque.visible ? bloque.color : "transparent";
       ctx.fill();
       ctx.closePath();
     });
@@ -244,8 +261,7 @@ function mueveBola(bola) {
 // Actualiza puntuacion
 function actualizaPuntuacion() {
   puntuacion++;
-  document.getElementById("puntuacion").innerHTML = puntuacion;
-  textoAnimado = { texto: "+1", x: canvas.width - 100, y: 35 }; // Iniciar la animación del texto  
+  crearSpans();
   if (puntuacion === numBloques) {
     bola.visible = false;
     paleta.visible = false;
@@ -273,23 +289,12 @@ function reiniciarJuego() {
   bola.velocidad = BOLA_VELOCIDAD;
   // Reiniciar la puntuación
   puntuacion = 0;
-  document.getElementById("puntuacion").innerHTML = 0;
   if (bolasAdicionales.length == 0) {
     bolasAdicionales.push(bola);
   }
   dibujaBolas();
   juegoIniciado = false;
   juegoTerminado = false;
-}
-
-//Animacion para los puntos
-function dibujaAnimacion() {
-  ctx.beginPath();
-  ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
-  ctx.font = '20px Arial';
-  ctx.fillText(texto, x, y);
-  ctx.fill();
-  ctx.closePath();
 }
 
 // Dibujar el canvas
@@ -301,9 +306,7 @@ function dibujaTodo() {
   dibujaMuro();
 }
 
-juegoTerminado = false;
-juegoPausado = false;
-juegoIniciado = false;
+
 // Función para pausar el juego
 function update() {
   if (!juegoPausado && juegoIniciado) {
@@ -320,39 +323,15 @@ function update() {
     });
   }
   dibujaTodo();
-/*   if (textoAnimado) {
-    mostrarTextoAnimadoEnCanvas(textoAnimado.texto, textoAnimado.x, textoAnimado.y);
-  } */
   animationId = requestAnimationFrame(update);
 }
 
-/* function mostrarTextoAnimadoEnCanvas(texto, x, y) {
-  let alpha = 1;
-  const velocidadDescenso = 1;
-  const velocidadDifuminado = 0.02;
-
-  // Función para dibujar el texto con la transparencia actual
-  function draw() { // Limpiar todo el lienzo
-    ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
-    ctx.font = '20px Arial';
-    ctx.fillText(texto, x, y);
-  }
-
-  // Función para animar el texto
-  function animate() {
-    draw();
-    alpha -= velocidadDifuminado; // Reducir la transparencia
-    if (alpha > 0) {
-      console.log("Altura: " + y)
-      y += velocidadDescenso + 5; // Mover el texto hacia abajo
-      requestAnimationFrame(animate); // Continuar la animación en el próximo fotograma
-    } else {
-      textoAnimado = null; // Restablecer la variable de control una vez que la animación haya terminado
-    } 
-  }
-
-  animate(); // Iniciar la animación
-} */
+function crearSpans() {
+  // Crea un nuevo elemento span
+  const nuevoSpan = document.createElement('span');
+  nuevoSpan.textContent = '+1';
+  spans.appendChild(nuevoSpan);
+}
 
 
 // Función para pausar el juego
