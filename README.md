@@ -67,7 +67,7 @@ bloques.forEach(grupo => {
 });
 ```
 3. Puntuación actualizada en tiempo real.
-   ```javascript
+  ```javascript
     // Actualiza la puntuación del jugador
 function actualizaPuntuacion() {
   puntuacion++; // Incrementa la puntuación en 1
