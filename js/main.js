@@ -158,7 +158,7 @@ function dibujaPaleta() {
 
 // Dibuja la puntuación
 function dibujaPuntuacion() {
-  ctx.font = "20px Arial";
+  ctx.font = "10px 'Press Start 2P', Arial";
   ctx.fillText(`Puntos: ${puntuacion}`, canvas.width - 100, 30);
 }
 
