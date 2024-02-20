@@ -146,6 +146,6 @@ function crearBloques() {
 3. Golpea la bola con la paleta para destruir los bloques y ganar puntos.
 4. Intenta alcanzar la puntuación más alta posible.
 
-¡Diviértete jugando!
+¡Diviértete jugando! 🎮
 
 
